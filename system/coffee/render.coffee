@@ -6,19 +6,22 @@ util = require 'util'
 file = require 'file'
 
 # Custom modules
+config = require('./config.js').config()
 marked = require './marked.js'
 
 # Settings
-posts = path.join __dirname, '../../wordpress/posts/'			
+# posts = path.join __dirname, '~/work/sandbos/carlosrodriguez-me/wordpress/posts/'
+
 
 # readFiles
 exports.readFiles = (cb) ->
 	data = []
-	files = file.walkSync posts, (test, dirPath, files, dirs) ->
+	console.log config
+	files = file.walkSync config.posts, (test, dirPath, files, dirs) ->
 		lodash.each files, (file) ->
-			ext = path.extname posts + file
+			ext = path.extname config.posts + file
 			if ext == ".md"
-				data.push marked.renderMarkdown posts + file
+				data.push marked.renderMarkdown config.posts + file
 		return 
 
 	cb data
