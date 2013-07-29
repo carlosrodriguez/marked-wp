@@ -9,5 +9,5 @@ _login = JSON.parse fs.readFileSync dir + "_login.js"
 exports.config = () ->
 	config = 
 		author: "Carlos Rodriguez"
-		url: "10.0.0.15"
+		url: "10.0.0.5"
 	lodash.extend config, _login
