@@ -22,7 +22,7 @@ setOptions = (opts) ->
 
 # Get Mata Data
 getMeta = (source) ->
-	meta = require 'markdown-extra'
+	meta = require './meta.js'
 
 	meta.metadata source, (md) ->
 		retObj = {}
@@ -42,15 +42,21 @@ exports.renderMarkdown = (source, opts) ->
 	setOptions opts
 	# Extract Meta information
 	meta = lodash.extend config.config(), getMeta(fileContents)
-	sourceContent = fileContents.replace /<!--(\n(.*))*-->/g, ""
+	sourceContent = fileContents.replace /---(\n(.*))*---/g, ""
 	tokens = marked.lexer sourceContent
 	content = marked.parser tokens
 	status = if (meta.status) then meta.status else "publish"
-	{
+	post = 
 		id: meta.id
 		content: content
 		author: meta.author
 		title: meta.title
 		status: status
 		source: source
-	}
+		date: new Date(meta.date)  if "date" of meta
+
+	if "modified" of meta
+		post.modified = new Date(meta.modified)
+
+	post
+	
